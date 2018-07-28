@@ -1,0 +1,567 @@
+% STL.tex
+% 2017/07/20, v1
+
+\chapter{Standard Template Library}
+\label{STL}
+
+
+
+\section{STL简介}\index{STL}
+
+STL（Standard Template Library,标准模版库）是C++语言标准中的重要组成部分。STL以模板类和模版函数的形式为程序员提供了各种数据结构和算法的实现，程序员吐过能够充分的利用STL，可以在代码空间、执行时间和编码效率上获得极大的好处。
+
+STL大致可以分为三大类：算法（algorithm）、容器（container）、迭代器（iterator）。
+
+STL容器是一些模版类，提供了多种组织数据的常用方法，例如：vector（向量，类似于数组）、list（列表，类似于链表）、deque（双向队列）、set（集合）、map（映像）、stack（栈）、queue（队列）、priority\_queue（优先队列）等，通过模版的参数我们可以指定容器中的元素类型。
+ 
+STL算法是一些模版函数，提供了相当多的有用的算法和操作，从简单的for\_each（遍历）到复杂的stable\_sort（稳定排序）。 
+
+STL迭代器是对C中的指针的一般化，用来将算法和容器联系起来。几乎所有的STL算法都是通过迭代器来存取元素序列进行工作的，而STL中的每一个容器也都定义了其本身所专有的迭代器，用以存取容器中的元素。有趣的是，普通的指针也可以像迭代器一般的工作。
+
+熟悉了STL后，你会发现，很多功能只需要用短短的几行就可以实现了。通过STL，我们可以构造出优雅而且高效的代码，甚至比你自己手工实现的代码效率还要高很多。 
+
+STL的另外一个特点是，它是以源码方式免费提供的，程序员不仅可以自由地使用这些代码，也可以学习其源码，甚至可以按照自己的需要去修改它，这一点十分得人性化。
+
+例：\href{https://xoj.red/problems/show/1128}{XOJ 1128 Ugly Numbers}
+\begin{lstlisting}
+#include <iostream>
+#include <queue>
+
+/*
+ * Ugly Numbers
+ * Ugly numbers are numbers whose only prime factors are 2, 3 or 5.
+ * 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, ...
+ */
+
+typedef std::pair<unsigned long, int> node_type;
+
+int main(int argc, const char * argv[])
+{
+    unsigned long result[1502];
+    std::priority_queue<node_type, std::vector<node_type>, std::greater<node_type>> Q;
+    Q.push(std::make_pair(1, 2));
+    for (int i = 0; i < 1500; i++)
+    {
+        node_type node = Q.top();
+        Q.pop();
+        switch (node.second)
+        {
+            case 2:
+                Q.push(std::make_pair(node.first * 2, 2));
+            case 3:
+                Q.push(std::make_pair(node.first * 3, 3));
+            case 5:
+                Q.push(std::make_pair(node.first * 5, 5));
+        }
+        result[i] = node.first;
+    }
+
+    int n;
+    std::cin >> n;
+    while (n > 0)
+    {
+        std::cout << result[n - 1] << '\n';
+        std::cin >> n;
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+
+\section{pair}\index{pair}
+STL的<utility>头文件中描述了一个看上去非常简单的模版类pair，用来表示一个二元组或元素对，并提供了按照字典序对元素对进行大小比较运算符模版函数。 
+
+Example，想要定义一个对象表示一个平面坐标点，则可以：
+
+\begin{lstlisting}
+pair<double, double> p;
+cin >> p.first >> p.second;
+\end{lstlisting}
+
+pair模版类需要两个参数：首元素的数据类型和尾元素的数据类型。pair模版类对象有两个成员：first和second，分别表示首元素和尾元素。 
+
+在<utility>中已经定义了pair上的六个比较运算符：<、>、<=、>=、==、!=，其规则是先比较first，first相等时再比较second，这符合大多数应用的逻辑。当然，也可以通过重载这几个运算符来重新指定自己的比较逻辑。 
+
+除了直接定义一个pair对象外，如果需要即时生成一个pair对象，也可以调用在<utility>中定义的一个模版函数：make\_pair。make\_pair需要两个参数，分别为元素对的首元素和尾元素。
+
+在Ugly Numbers的实现代码中，就可以用pair来表示推演树上的结点，first表示结点的值，用second表示结点是由父结点乘以哪一个因子得到的。
+
+<utility>看上去是一个很简单的头文件，但是<utility>的设计中却浓缩反映了STL设计的基本思想。有意深入了解和研究STL的朋友，仔细阅读和体会这个简单的头文件，不失为一种入门的途径。
+
+
+\section{vector}
+在STL的<vector>头文件中定义了vector（向量容器模版类），vector容器以连续数组的方式存储元素序列，可以将vector看作是以顺序结构实现的线性表。当我们在程序中需要使用动态数组时，vector将会是理想的选择，vector可以在使用过程中动态地增长存储空间。 
+
+vector模版类需要两个模版参数，第一个参数是存储元素的数据类型，第二个参数是存储分配器的类型，其中第二个参数是可选的，如果不给出第二个参数，将使用默认的分配器。
+
+下面给出几个常用的定义vector向量对象的方法示例：
+\begin{lstlisting}
+vector<int> s;      
+//定义一个空的vector对象，存储的是int类型的元素
+vector<int> s(n);   
+//定义一个含有n个int元素的vector对象
+vector<int> s(first, last); 
+//定义一个vector对象，并从由迭代器first和last定义的序列[first, last)中复制初值
+\end{lstlisting}
+
+vector的基本操作：
+
+\begin{lstlisting}
+s[i]                //直接以下标方式访问容器中的元素
+s.front()           //返回首元素
+s.back()            //返回尾元素
+s.push_back(x)      //向表尾插入元素x
+s.size()            //返回表长
+s.empty()           //表为空时，返回真，否则返回假
+s.pop_back()        //删除表尾元素
+s.begin()           //返回指向首元素的随机存取迭代器
+s.end()             //返回指向尾元素的下一个位置的随机存取迭代器
+s.insert(it, val)   //向迭代器it指向的元素前插入新元素val
+s.insert(it, n, val)//向迭代器it指向的元素前插入n个新元素val
+s.insert(it, first, last)   
+//将由迭代器first和last所指定的序列[first, last)插入到迭代器it指向的元素前面
+s.erase(it)         //删除由迭代器it所指向的元素
+s.erase(first, last)//删除由迭代器first和last所指定的序列[first, last)
+s.reserve(n)        //预分配缓冲空间，使存储空间至少可容纳n个元素
+s.resize(n)
+//改变序列长度，超出的元素将会全部被删除，如果序列需要扩展（原空间小于n），元素默认值将填满扩展出的空间
+s.resize(n, val)
+//改变序列长度，超出的元素将会全部被删除，如果序列需要扩展（原空间小于n），val将填满扩展出的空间
+s.clear()           //删除容器中的所有元素
+s.swap(v)           //将s与另一个vector对象进行交换
+s.assign(first, last)
+//将序列替换成由迭代器first和last所指定的序列[first, last)，[first, last)不能是原序列中的一部分
+\end{lstlisting}
+要注意的是，resize操作和clear操作都是对表的有效元素进行的操作，但并不一定会改变缓冲空间的大小。另外，vector还有其他的一些操作，如反转、取反等，不再一一列举。vector上还定义了序列之间的比较操作运算符（>、<、>=、<=、==、!=），可以按照字典序比较两个序列。
+
+例：输入个数不定的一组整数，再将这组整数按倒序输出。
+\begin{lstlisting}
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+int main()
+{
+    vector<int> L;
+    int x;
+    while(cin >> x)
+    {
+        L.push_back(x);
+    }
+    for (int i = L.size() - 1; i >= 0; i--)
+    {
+        cout << L[i] << " ";
+    }
+    cout << endl;
+    return 0;
+}
+\end{lstlisting}
+
+
+
+\section{stack / queue / priority\_queue}
+stack（栈）和queue（队列）是在程序设计中经常会用到的数据容器，STL为我们提供了方便的stack（栈）和queue（队列）的实现。
+
+准确的说，STL中的stack和queue不同于vector、list等容器，而是对这些容器进行了重新的包装。这里我们不去深入讨论STL的stack和queue的实现细节，而是来了解一些他们的基本使用。
+
+\subsection{stack}
+
+stack模版类的定义在<stack>头文件中。 
+stack模版类需要两个模版参数，一个是元素类型，另一个是容器类型，但是只有元素类型是必要的，在不指定容器类型时，默认容器的类型为deque。
+
+定义stack对象的示例代码如下：
+\begin{lstlisting}
+stack<int> s;
+stack<string> ss;
+\end{lstlisting}
+
+stack的基本操作有：
+\begin{lstlisting}
+s.push(x);  //  入栈
+s.pop();    //  出栈
+s.top();    //  访问栈顶
+s.empty();  //  当栈空时，返回true
+s.size();   //  访问栈中元素个数
+\end{lstlisting}
+
+例：
+\begin{lstlisting}
+/*
+ * 1064--Parencoding（ZOJ）
+ * string和stack实现
+ */
+#include <iostream>
+#include <string>
+#include <stack>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        int m;
+        cin >> m;
+        string str;
+        int leftpa = 0;
+        for (int j = 0; j < m; j++)
+        {
+            int p;
+            cin >> p;
+            for (int k = 0; k < p - leftpa; k++)
+            {
+                str += '(';
+            }
+            str += ')';
+            leftpa = p;
+        }
+        stack<int> s;
+        for (string::iterator it = str.begin(); it != str.end(); it++)
+        {
+            if (*it == '(')
+            {
+                s.push(1);
+            }
+            else
+            {
+                int p = s.top();
+                s.pop();
+                cout << p << " ";
+                if (!s.empty())
+                {
+                    s.top() += p;
+                }
+            }
+            cout << '\n';
+        }
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+
+\subsection{queue}
+queue模版类的定义在<queue>头文件中。 
+queue与stack相似，queue模版类也需要两个模版参数，一个元素类型，一个容器类型，元素类型时必须的，容器类型时可选的，默认为deque类型。
+
+定义queue对象的示例代码必须如下：
+\begin{lstlisting}
+queue<int> q;
+queue<double> qq;
+\end{lstlisting}
+
+queue的基本操作：
+\begin{lstlisting}
+q.push(x);  //  入队列
+q.pop();    //  出队列
+q.front();  //  访问队首元素
+q.back();   //  访问队尾元素
+q.empty();  //  判断队列是否为空
+q.size();   //  访问队列中的元素个数
+\end{lstlisting}
+
+
+\subsection{priority\_queue}
+在<queue>头文件中，还定义了另一个非常有用的模版类priority\_queue（优先队列）。优先队列与队列的差别在于优先队列不是按照入队的顺序出队，而是按照队列中元素的优先权出队列（默认为大者优先，也可以通过指定算子来指定自己的优先顺序）。
+
+priority\_queue模版类有三个模版参数，第一个是元素类型，第二个是容器类型，第三个是比较算子。其中后两者都可以忽略，默认容器为vector，默认算子为less，即小的往前排，大的往后排（出队列时列尾元素先出队）。 
+定义priority\_queue对象的代码示例：
+
+\begin{lstlisting}
+priority_queue<int> q;
+priority_queue<pair<int, int> > qq;                 //  注意在两个尖括号之间一定要留空格，防止误判
+priority_queue<int, vector<int>, greater<int> > qqq;//  定义小的先出队列
+\end{lstlisting}
+
+priority\_queue的基本操作与queue的略微不同。
+
+\begin{lstlisting}
+q.empty()     //  如果队列为空，则返回true，否则返回false
+q.size()      //  返回队列中元素的个数
+q.pop()       //  删除队首元素，但不返回其值
+q.top()       //  返回具有最高优先级的元素值，但不删除该元素
+q.push(item)  //  在基于优先级的适当位置插入新元素
+\end{lstlisting}
+
+初学者在使用priority\_queue时，最困难的可能就是如何定义比较算子了。如果是基本数据类型，或已定义了比较运算符的类，可以直接使用STL的less算子和greater算子——默认为使用less算子。如果要定义自己的比较算子，方法有多种，这里介绍其中一种：重载比较运算符。优先队列试图这两个元素x和y代入比较运算符（对于less算子，调用x < y，对于greater算子，调用x > y），若结果为真，则x排在y前面，y将先出队列，反之，则y排在x前面，x将先出队列。 
+如下算子示例：
+
+\begin{lstlisting}
+#include <iostream>
+#include <queue>
+
+using namespace std;
+
+class T
+{
+public:
+    int x, y, z;
+    T(int a, int b, int c) : x(a), y(b), z(c) {}
+};
+
+bool operator < (const T &tOne, const T &tTwo)
+{
+    return tOne.z < tTwo.z;  //  按照z的顺序来决定tOne和tTwo的顺序
+}
+
+int main()
+{
+    priority_queue<T> q;
+    q.push(T(4, 4, 3));
+    q.push(T(2, 2, 5));
+    q.push(T(1, 5, 4));
+    q.push(T(3, 3, 6));
+
+    while (!q.empty())
+    {
+        T t = q.top();
+        q.pop();
+        cout << t.x << " " << t.y << " " << t.z << '\n';
+    }
+    return 0;
+}
+\end{lstlisting}
+
+输出结果为（注意是按照z的顺序从大到小出队列）： 
+\begin{lstlisting}
+3 3 6 
+2 2 5 
+1 5 4 
+4 4 3
+\end{lstlisting}
+
+如果想要按照z的顺序从小到大出队列，只需要改动比较运算符重载为：
+\begin{lstlisting}
+bool operator > (const T &tOne, const T &tTwo)
+{
+    return tOne.z > tTwo.z;  //  按照z的顺序来决定tOne和tTwo的顺序
+}
+\end{lstlisting}
+
+输出结果为：
+\begin{lstlisting} 
+4 4 3 
+1 5 4 
+2 2 5 
+3 3 6 
+\end{lstlisting}
+
+如果我们把第一个例子中的比较运算符重载为：
+\begin{lstlisting}
+bool operator < (const T &tOne, const T &tTwo)
+{
+    return tOne.z > tTwo.z;  //  按照z的顺序来决定tOne和tTwo的顺序
+}
+\end{lstlisting}
+则会得到和第二个例子一样的结果，所以，决定算子的是比较运算符重载函数内部的返回值。
+
+
+\section{set / multiset}
+set是与集合相关的容器，STL为我们提供了set的实现，在编程题中遇见集合问题直接调用是十分方便的。
+
+\subsection{set}
+
+set模版类的定义在头文件<set>中。
+
+定义set对象的示例代码如下：
+\begin{lstlisting}
+set<int> s;
+set<double> ss;
+\end{lstlisting}
+
+set的基本操作：
+
+\begin{lstlisting}
+s.begin()       //  返回指向第一个元素的迭代器
+s.clear()       //  清除所有元素
+s.count()       //  返回某个值元素的个数
+s.empty()       //  如果集合为空，返回true(真）
+s.end()         //  返回指向最后一个元素之后的迭代器，不是最后一个元素
+s.equal_range() //  返回集合中与给定值相等的上下限的两个迭代器
+s.erase()       //  删除集合中的元素
+s.find()        //  返回一个指向被查找到元素的迭代器
+s.get_allocator()   //  返回集合的分配器
+s.insert()      //  在集合中插入元素
+s.lower_bound() //  返回指向大于（或等于）某值的第一个元素的迭代器
+s.key_comp()    //  返回一个用于元素间值比较的函数
+s.max_size()    //  返回集合能容纳的元素的最大限值
+s.rbegin()      //  返回指向集合中最后一个元素的反向迭代器
+s.rend()        //  返回指向集合中第一个元素的反向迭代器
+s.size()        //  集合中元素的数目
+s.swap()        //  交换两个集合变量
+s.upper_bound() //  返回大于某个值元素的迭代器
+s.value_comp()  //  返回一个用于比较元素间的值的函数
+\end{lstlisting}
+
+\subsection{multiset}
+在<set>头文件中，还定义了另一个非常实用的模版类multiset（多重集合）。多重集合与集合的区别在于集合中不能存在相同元素，而多重集合中可以存在。
+
+定义multiset对象的示例代码如下：
+\begin{lstlisting}
+multiset<int> s;
+multiset<double> ss;
+\end{lstlisting}
+
+multiset和set的基本操作相似，需要注意的是，集合的count()能返回0（无）或者1（有），而多重集合是有多少个返回多少个。
+
+
+\section{map}
+在STL的头文件中<map>中定义了模版类map和multimap，用有序二叉树表存储类型为pair<const Key, T>的元素对序列。序列中的元素以const Key部分作为标识，map中所有元素的Key值必须是唯一的，multimap则允许有重复的Key值。
+
+可以将map看作是由Key标识元素的元素集合，这类容器也被称为“关联容器”，可以通过一个Key值来快速决定一个元素，因此非常适合于需要按照Key值查找元素的容器。 
+map模版类需要四个模版参数，第一个是键值类型，第二个是元素类型，第三个是比较算子，第四个是分配器类型。其中键值类型和元素类型是必要的。
+
+定义map对象的代码示例：
+
+\begin{lstlisting}
+map<string, int> m;
+\end{lstlisting}
+
+map的基本操作：
+
+\begin{lstlisting}
+/*  向map中插入元素  */
+/*
+[key]操作是map很有特色的操作,如果在map中存在键值为key的元素对, 则返回该元素对的值域部分,否则将会创建一个键值为key的元素对,值域为默认值。所以可以用该操作向map中插入元素对或修改已经存在的元素对的值域部分。
+*/
+m[key] = value;
+
+/*
+也可以直接调用insert方法插入元素对,insert操作会返回一个pair,当map中没有与key相匹配的键值时,其first是指向插入元素对的迭代器,其second为true;若map中已经存在与key相等的键值时,其first是指向该元素对的迭代器,second为false。
+*/
+m.insert(make_pair(key, value));
+
+
+/*  查找元素  */
+/*
+要注意的是,当与该键值相匹配的元素对不存在时,会创建键值为key（当另一个元素是整形时，m[key]=0）的元素对。
+*/
+int i = m[key];
+/*
+如果map中存在与key相匹配的键值时,find操作将返回指向该元素对的迭代器,否则,返回的迭代器等于map的end()(参见vector中提到的begin()和end()操作)。
+*/
+map<string, int>::iterator it = m.find(key);
+
+/*  删除元素  */
+m.erase(key);   //  删除与指定key键值相匹配的元素对,并返回被删除的元素的个数。
+m.erase(it);    //  删除由迭代器it所指定的元素对,并返回指向下一个元素对的迭代器。
+
+/*  其他操作  */
+m.size();       //  返回元素个数
+m.empty();      //  判断是否为空
+m.clear();      //  清空所有元素
+\end{lstlisting}
+
+例一：
+\begin{lstlisting}
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+typedef map<int, string, less<int> > M_TYPE
+typedef M_TYPE::iterator M_IT
+typedef M_TYPR::const_iterator M_CIT
+
+int main()
+{
+    M_TYPR myTestMap;
+
+    myTestMap[3] = "No.3";
+    myTestMap[5] = "No.5";
+    myTestMap[1] = "No.1";
+    myTestMap[2] = "No.2";
+    myTestMap[4] = "No.4";
+
+    M_IT itStop = myTestMap.find(2);
+
+    cout << "myTestMap[2] = " << itStop->second << endl;
+    itStop->second = "No.2 After modification";
+    cout << "myTestMap[2] = " << itStop->second << endl;
+    cout << "Map contents:" << endl;
+
+    for (M_CIT it = myTestMap.begin(); it != myTestMap.end(); it++)
+    {
+        cout << it->second << endl;
+    }
+
+    return 0;
+}
+\end{lstlisting}
+
+程序执行的输出结果为： 
+
+\begin{lstlisting}
+MyTestMap[2] = No.2 
+MyTestMap[2] = No.2 After modification Map contents : 
+No.1 
+No.2 After modification 
+No.3 
+No.4 
+No.5
+\end{lstlisting}
+
+例二：
+
+\begin{lstlisting}
+#include <iostream>
+#include <map>
+
+using namespace std;
+
+int main()
+{
+    map<string, int> m;
+    m["one"] = 1;
+    m["two"] = 2;
+
+    // 几种不同的 insert 调用方法 
+    m.insert(make_pair("three", 3));
+    m.insert(map<string, int>::value_type("four", 4)); 
+    m.insert(pair<string, int>("five", 5));
+
+    string key;
+    while (cin >> key)
+    {
+        map<string, int>::iterator it = m.find(key);
+        if (it == m.end())
+        {
+            cout << "No such key!" << endl;
+        }
+        else
+        {
+            cout << key << " is " << it->second << endl;
+            cout << "Erased " << m.erase(key) << endl;
+        }
+    }
+
+    return 0; 
+}
+\end{lstlisting}
+
+
+
+\section{algorithm}
+
+<algorithm>无疑是STL中最大的一个头文件,它是由一大堆模板函数组成的。
+
+以下列举出<algorithm>中的模版函数： 
+
+\subsection{sort}
+
+
+
+
+
+
+
+
+
+
+
+\endinput % STL

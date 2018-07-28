@@ -1,0 +1,86 @@
+% data_structure.tex
+% 2017/07/20, v1
+
+\chapter{数据结构（树）}
+\label{data_structure}
+
+\newcommand{\prefixdsa}[1]{data\_structure/#1}
+\newcommand{\xprefixdsa}[1]{data_structure/#1}
+
+\section{森林转二叉树}
+
+
+\section{并查集}
+
+\xsubsection{带路径压缩 / 权值更新}{\prefixdsa{disjoint1.cpp}}
+\lstinputlisting{\xprefixdsa{disjoint1.cpp}}
+
+\section{线段树}
+\subsection{求矩形并的面积（线段树+离散化+扫描线）}
+例：POJ 1151 Atlantis 
+\lstinputlisting{data_structure/segment_tree1.cpp}
+
+\subsection{求矩形并的周长（线段树+离散化+扫描线）}
+例：POJ 1177 Picture 
+\lstinputlisting{data_structure/segment_tree2.cpp}
+
+
+
+\section{树状数组}
+\subsection{一维}
+\lstinputlisting{data_structure/binary_index_tree1.cpp}
+
+\subsection{二维}
+\lstinputlisting{data_structure/binary_index_tree2.cpp}
+
+
+
+\section{RMQ}
+\subsection{一维}
+\lstinputlisting{data_structure/RMQ1.cpp}
+
+\xsubsection{二维}{\prefixdsa{RMQ2.cpp}}
+\lstinputlisting{\xprefixdsa{RMQ2.cpp}}
+
+\section{划分树}
+\lstinputlisting{data_structure/partition_tree.cpp}
+
+\section{左偏树}
+\lstinputlisting{data_structure/leftist_tree.cpp}
+
+\section{伸展树 Splay Tree}
+\lstinputlisting{data_structure/partition_tree.cpp}
+
+\section{Treap}
+\lstinputlisting{data_structure/treap.cpp}
+
+\section{动态树}
+例：HDU 4010 Query on The Trees
+\lstinputlisting{data_structure/dynamic_tree.cpp}
+
+\section{主席树}
+\subsection{查询区间有多少个不同的数}
+\lstinputlisting{data_structure/chairman_tree1.cpp}
+
+\subsection{静态区间第k小}
+例：POJ 2104 K-th Number
+\lstinputlisting{data_structure/chairman_tree2.cpp}
+
+\subsection{树上路径点权第k大}
+\lstinputlisting{data_structure/chairman_tree2.cpp}
+
+\subsection{动态第区间第k大}
+例：ZOJ 2112
+\lstinputlisting{data_structure/chairman_tree2.cpp}
+
+\section{树链剖分}
+\subsection{点权}
+例：HDU 3966 Aragorn’s Story
+\lstinputlisting{data_structure/chain_tree1.cpp}
+
+\subsection{边权}
+例：HDU 3966 Aragorn’s Story
+\lstinputlisting{data_structure/chain_tree2.cpp}
+
+
+\endinput % data_structure

@@ -1,0 +1,112 @@
+% number_theory.tex
+% 2017/07/20, v1
+
+\chapter{数论}
+\label{number_theory}
+
+\newcommand{\prefixnumbthy}[1]{number\_theory/#1}
+\newcommand{\xprefixnumbthy}[1]{number_theory/#1}
+
+
+\begin{summary}
+本章算法主要关于整除、素数、最大公约数和同余等问题。重点内容有：求最大公约数的欧几里德算法、线性欧拉筛、扩展欧几里德算法、同余方程、中国剩余定理、快速幂、逆元、欧拉函数。
+\end{summary}
+
+\xsection{欧几里德gcd算法}{\prefixnumbthy{gcd.cpp}}
+
+\lstinputlisting{\xprefixnumbthy{gcd.cpp}}
+
+\xsection{扩展欧几里德算法}{\prefixnumbthy{extend\_gcd.cpp}}
+
+\lstinputlisting{\xprefixnumbthy{extend_gcd.cpp}}
+
+
+\section{素数相关算法}
+
+\xsubsection{判断$n$是否素数}{\prefixnumbthy{is\_prime.cpp}}
+\lstinputlisting{\xprefixnumbthy{is_prime.cpp}}
+
+
+\xsubsection{线性筛（欧拉筛）求素数表}{\prefixnumbthy{eular\_prime.cpp}}
+\begin{example}[素数]
+\href{https://xoj.red/problems/show/1923}{XOJ 1923 素数}
+\end{example}
+\lstinputlisting{\xprefixnumbthy{eular_prime.cpp}}
+
+
+\xsubsection{质因数分解}{\prefixnumbthy{factors.cpp}}
+\begin{example}[质因数分解]
+\href{https://xoj.red/problems/show/1626}{XOJ 1626 质因数分解}
+\end{example}
+\lstinputlisting{\xprefixnumbthy{factors.cpp}}
+
+
+
+
+\section{欧拉函数$\varphi(x)$}
+$\varphi(n)$表示小于$n$并与$n$互质的正整数的数目，计算公式如下：
+\[
+\varphi(n) = n \prod_{i=1}^n (1-\frac{1}{p_i})
+\]
+
+其中$p_i \; (i \in [1,n])$是$n$的所有质因子，即$n$的质因数分解是：
+\[
+n = p_1^{a_1} \cdot p_2^{a_2} \cdot p_3^{a_3} \cdots p_k^{a_k}
+\]
+\begin{example}[素数]
+\href{https://xoj.red/problems/show/3329}{XOJ 3329 Relatives}
+\end{example}
+\xsubsection{分解质因数法}{\prefixnumbthy{phi\_factors.cpp}}
+\lstinputlisting{\xprefixnumbthy{phi_factors.cpp}}
+
+\xsubsection{分解质因数法（单独求解）}{\prefixnumbthy{phi\_decompose.cpp}}
+\lstinputlisting{\xprefixnumbthy{phi_decompose.cpp}}
+
+\xsubsection{筛法欧拉函数}{\prefixnumbthy{phi\_filter.cpp}}
+\lstinputlisting{\xprefixnumbthy{phi_filter.cpp}}
+
+\xsubsection{线性筛~欧拉函数和素数表}{\prefixnumbthy{phi\_euler.cpp}}
+\lstinputlisting{\xprefixnumbthy{phi_euler.cpp}}
+
+
+\section{快速幂}
+
+\xsubsection{二分快速幂取模}{\prefixnumbthy{power\_mod.cpp}}
+\lstinputlisting{\xprefixnumbthy{power_mod.cpp}}
+
+
+\subsection{二分快速幂（一般高精度）}
+
+
+\section{逆元}
+
+
+\section{同余方程（组）}
+
+\xsubsection{同余方程}{\prefixnumbthy{mod\_equation.cpp}}
+\begin{example}[同余方程]
+\href{https://xoj.red/problems/show/1637}{XOJ 1637 同余方程}
+\end{example}
+\lstinputlisting{\xprefixnumbthy{mod_equation.cpp}}
+
+\xsubsection{同余方程组（中国剩余定理）}{\prefixnumbthy{mod\_equation2.cpp}}
+\begin{example}[中国剩余定理]
+\href{https://xoj.red/problems/show/3335}{XOJ 3335 生理周期}
+\end{example}
+\lstinputlisting{\xprefixnumbthy{mod_equation2.cpp}}
+
+\xsubsection{同余方程组（不互质）}{\prefixnumbthy{mod\_equation3.cpp}}
+\begin{example}[同余方程组]
+\href{https://xoj.red/problems/show/3336}{XOJ 3336 表示整数的奇怪方法}
+\end{example}
+\lstinputlisting{\xprefixnumbthy{mod_equation3.cpp}}
+
+
+
+
+\section{高精度}
+\subsection{高精度类}
+\lstinputlisting{number_theory/big_integer.cpp}
+
+
+\endinput % number_thery

@@ -1,0 +1,40 @@
+% tactics.tex
+% 2017/07/20, v1
+
+\chapter{思考策略及优化}
+\label{tactics}
+
+
+\section{二分查找}
+\subsection{查找单值$v$}
+\lstinputlisting{tactics/binary1.cpp}
+
+\subsection{查找大于等于v的第一个值}
+\lstinputlisting{tactics/binary2.cpp}
+
+\subsection{查找小于等于v的最后一个值}
+\lstinputlisting{tactics/binary3.cpp}
+
+\subsection{二分套二分}
+\lstinputlisting{tactics/binary4.cpp}
+
+
+\section{输入 / 输出外挂}
+
+我们都知道，scanf()、printf()、cin、cout其实就是对其他一些基础的获取或输出语句（getchar() putchar()等）进行封装，而这些基础的函数功能弱，效率高，所以我们的输入输出外挂也是仿照着scanf()、printf()、cin、cout来实现的，只不过做了针对性的改造，最终我们改造出来多种功能比scanf()等弱、比getchar()等强，效率比scanf()等高、比gerchar()等低的函数，从而达到针对性的作用，减少了不必要的资源消耗。
+
+当然输入输出外挂一般用在大量输入输出的情况下，这样性价比才高一些，否则得不偿失（牺牲了代码长度而换来了微不足道的效率提升）。
+
+一般情况下，加\verb|std::ios::sync_with_stdio(false);|取消输入输出同步即可，但注意不要C/C++混用！
+
+\subsection{适用于正整数}
+\lstinputlisting{tactics/input_output1.cpp}
+
+
+\subsection{正负整数}
+\lstinputlisting{tactics/input_output2.cpp}
+
+
+
+
+\endinput % tactics

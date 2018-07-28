@@ -1,0 +1,57 @@
+% network.tex
+% 2017/07/20, v1
+
+\chapter{网络流}
+\label{network}
+
+
+
+\section{二分图匹配}
+
+\subsection{最大匹配 / 最小覆盖 / 最大独立集 / 匈牙利算法}
+\subsubsection{邻接矩阵+DFS}
+\lstinputlisting{network/hungarian_matrix_dfs.cpp}
+
+\subsubsection{邻接表+DFS}
+\lstinputlisting{network/hungarian_adjacency_dfs.cpp}
+
+\subsubsection{邻接矩阵+BFS}
+\lstinputlisting{network/hungarian_matrix_bfs.cpp}
+
+\subsection{最大匹配 / 最小覆盖 / 最大独立集 / Hopcroft-Carp算法}
+\subsubsection{邻接矩阵+DFS}
+\lstinputlisting{network/hopcroft_matrix_dfs.cpp}
+
+\subsubsection{邻接表+DFS}
+\lstinputlisting{network/hopcroft_adjacency_dfs.cpp}
+
+\subsection{二分图最佳完美匹配}
+\lstinputlisting{network/match_KM.cpp}
+
+\subsection{二分图多重匹配}
+\lstinputlisting{network/match_multiply.cpp}
+
+
+\section{最大流}
+\subsection{Dinic}
+\lstinputlisting{network/maxflow_dinic.cpp}
+
+\subsection{SAP}
+\lstinputlisting{network/maxflow_SAP.cpp}
+
+\subsection{ISAP}
+\subsubsection{基于邻接表}
+\lstinputlisting{network/maxflow_ISAP_adj.cpp}
+\subsubsection{BFS+栈优化}
+\lstinputlisting{network/maxflow_ISAP_bfs.cpp}
+
+\section{最小费用最大流}
+\subsubsection{$O(VEF)$}
+\lstinputlisting{network/mincost_flow1.cpp}
+\subsubsection{$O(V^2F)$}
+\lstinputlisting{network/mincost_flow2.cpp}
+
+\section{有上下界的最小（最大）流}
+\lstinputlisting{network/bound_minmax_flow.cpp}
+
+\endinput % network

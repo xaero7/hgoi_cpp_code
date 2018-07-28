@@ -1,0 +1,189 @@
+% graph_theory.tex
+% 2017/07/20, v1
+
+\chapter{图论}
+\label{graph_theory}
+
+
+
+\section{最短路}
+
+\subsection{Dijkstra，邻接矩阵存储}
+\lstinputlisting{graph_theory/dijkstra1.cpp}
+
+
+\subsection{Dijkstra，邻接矩阵存储，双路径信息}
+\lstinputlisting{graph_theory/dijkstra2.cpp}
+
+\subsection{Dijkstra，结点带权值}
+\lstinputlisting{graph_theory/dijkstra3.cpp}
+
+\subsection{Dijkstra，priority\_queue优化}
+\lstinputlisting{graph_theory/dijkstra4.cpp}
+
+\subsection{Bellman-Ford}
+\lstinputlisting{graph_theory/bellman_ford.cpp}
+
+\subsection{SPFA}
+\lstinputlisting{graph_theory/SPFA.cpp}
+
+\subsection{Floyd，邻接矩阵存储}
+\lstinputlisting{graph_theory/floyd1.cpp}
+
+\subsection{Floyd，点权 + 路径限制}
+\lstinputlisting{graph_theory/floyd2.cpp}
+
+
+\section{第K短路}
+\subsection{Dijkstra}
+\lstinputlisting{graph_theory/kth_sssp1.cpp}
+
+\subsection{Floyd，邻接矩阵存储}
+\lstinputlisting{graph_theory/kth_sssp2.cpp}
+
+
+
+\section{最小生成树 / 森林}
+\subsection{Prim}
+例：\href{https://xoj.red/problems/show/1240}{XOJ 1240 Agri-Net 最短网络}
+\lstinputlisting{graph_theory/mst_prim_matrix.cpp}
+
+\subsection{Prim + priority\_queue优化}
+\lstinputlisting{graph_theory/mst_prim_priority_queue.cpp}
+
+\subsection{Kruskal}
+\lstinputlisting{graph_theory/mst_kruskal.cpp}
+
+\subsection{斯坦纳树}
+\lstinputlisting{graph_theory/kth_sssp2.cpp}
+
+\subsection{最小生成森林 / K棵树}
+数据结构：并查集 算法：改进Kruskal 复杂度：O(mlongm) 
+根据Kruskal算法思想，图中的生成树在连接完第n - 1条边前，都是一个最小生成森林，每次贪心的选择两个不属于同一连通分量的树（如果连接一个连通分量，因为不会减少块数，那么就是不合算的）且用最“便宜”的边连起来，连接n - 1次后就形成了一棵MST，n - 2次就形成了一个两棵树的最小生成森林，n - 3、……、n - k次后，就形成了k棵树的最小生成森林，也就是题目要求的解。
+
+
+\section{次小生成树}
+\subsection{$O(v^2)$}
+\lstinputlisting{graph_theory/secondary_mst.cpp}
+
+
+\section{最小树形图}
+\subsection{朱刘算法}
+\lstinputlisting{graph_theory/mst_zhuliu.cpp}
+
+\subsection{有向图最小树形图}
+\lstinputlisting{graph_theory/mst_dir_tree.cpp}
+
+
+
+\section{LCA}
+\subsection{DFS + ST在线算法}
+例：POJ 1330 Nearest Common Ancestors
+\lstinputlisting{graph_theory/LCA_st.cpp}
+
+\subsection{Tarjan离线算法}
+例：POJ 1470 Closest Common Ancestors
+\lstinputlisting{graph_theory/LCA_Tarjan.cpp}
+
+\subsection{倍增法}
+例：POJ 1330 Nearest Common Ancestors
+\lstinputlisting{graph_theory/LCA_redouble.cpp}
+
+
+\section{树相关}
+\subsection{树的重心}
+\lstinputlisting{graph_theory/centre_of_tree.cpp}
+
+\subsection{DAG的DFS序}
+\lstinputlisting{graph_theory/dag_dfs_order.cpp}
+
+
+\section{连通性问题}
+\subsection{DFS求联通分量}
+\lstinputlisting{graph_theory/connected_component1.cpp}
+
+\subsection{无向图的连通度 / 割}
+\lstinputlisting{graph_theory/connected_component2.cpp}
+
+\subsection{无向图的割顶和桥}
+
+例：\href{https://xoj.red/problems/show/3099}{XOJ 3099}，求无向图的割顶和桥（模板）。
+
+\lstinputlisting{graph_theory/connected_component_cut.cpp}
+
+\subsection{双连通分量}
+\subsubsection{点-双连通分量}
+去掉桥,其余的连通分支就是边双连通分支了。一个有桥的连通图要变成边双连通图的话,把双连通子图收缩为一个点,形成一颗树。需要加的边为(leaf+1)/2 (leaf 为叶子结点个数) 
+
+例：POJ 3177 Redundant Paths 
+
+给定一个连通的无向图 G,至少要添加几条边,才能使其变为双连通图。
+\lstinputlisting{graph_theory/biconnected_component.cpp}
+
+\subsubsection{边-双连通分量}
+对于点双连通分支,实际上在求割点的过程中就能顺便把每个点双连通分支求出。建立一个栈,存储 当前双连通分支,在搜索图时,每找到一条树枝边或后向边(非横叉边),就把这条边加入栈中。如果遇到某时满足 DFS(u)<=Low(v),说明u是一个割点,同时把边从栈顶一个个取出,直到遇到了边(u,v), 取出的这些边与其关联的点,组成一个点双连通分支。割点可以属于多个点双连通分支,其余点和每条边只属于且属于一个点双连通分支。 
+例：POJ 2942 Knights of the Round Table
+奇圈,二分图判断的染色法,求点双连通分支
+\lstinputlisting{graph_theory/biconnected_component_edge.cpp}
+
+\subsection{有向图强连通分量}
+\subsubsection{基于邻接矩阵的DFS / BFS}
+\lstinputlisting{graph_theory/connected_strongly_dfsbfs.cpp}
+
+\subsubsection{Tarjan}
+\lstinputlisting{graph_theory/connected_strongly_tarjan.cpp}
+
+\subsubsection{Kosaraju}
+\lstinputlisting{graph_theory/connected_strongly_kosaraju.cpp}
+
+\section{最小环}
+令e(u, v)表示u和v之间的连边，令min(u, v)表示删除u和v之间的连边之后u和v之间的最短路, 最小环则是min(u, v) + e(u, v). 时间复杂度是 $O(EV^2)$. 
+改进算法：在Floyd的同时,顺便算出最小环，g[i][j]=(i,j)之间的边长
+\begin{lstlisting}
+dist:=g;
+for k:=1 to n do
+begin
+    for i:=1 to k-1 do
+      for j:=i+1 to k-1 do
+        answer:=min(answer, dist[i][j]+g[i][k]+g[k][j]);
+    for i:=1 to n do
+      for j:=1 to n do
+        dist[i][j]:=min(dist[i][j], dist[i][k]+dist[k][j]);
+end;
+\end{lstlisting}
+最小环改进算法的证明：一个环中的最大结点为k(编号最大), 与他相连的两个点为i, j, 这个环的最短长度为g[i][k]+g[k][j]+i到j的路径中所有结点编号都小于k的最短路径长度. 根据floyd的原理, 在最外层循环做了k-1次之后, dist[i][j]则代表了i到j的路径中所有结点编号都小于k的最短路径综上所述,该算法一定能找到图中最小环。
+\lstinputlisting{graph_theory/minimum_circle.cpp}
+
+\section{拓扑排序}
+\lstinputlisting{graph_theory/topsort.cpp}
+
+
+\section{2-SAT问题}
+\subsection{2-SAT}
+\lstinputlisting{graph_theory/2sat.cpp}
+
+\subsection{稳定婚姻问题}
+\lstinputlisting{graph_theory/2sat2.cpp}
+
+
+
+
+\section{最大团问题}
+\subsection{DP + DFS}
+\lstinputlisting{graph_theory/max_clique_dfs.cpp}
+
+
+\section{一般图的匹配}
+\subsection{一般图匹配带花树}
+\lstinputlisting{graph_theory/match_edmonds.cpp}
+
+\section{弦图}
+\subsection{判定}
+\lstinputlisting{graph_theory/chordal_judge.cpp}
+
+\subsection{Perfect Elimination点排列}
+\lstinputlisting{graph_theory/chordal_cardinality.cpp}
+
+
+
+\endinput % graph_theory
