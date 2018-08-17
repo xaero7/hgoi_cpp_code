@@ -4,6 +4,7 @@
 \chapter{网络流}
 \label{network}
 
+\newcommand{\prefixnetwork}[1]{network/#1}
 
 
 \section{二分图匹配}
@@ -33,8 +34,22 @@
 
 
 \section{最大流}
-\subsection{Dinic}
-\lstinputlisting{network/maxflow_dinic.cpp}
+
+\begin{example}[最大流]
+\href{https://xoj.red/problems/show/1264}{XOJ 1264 Drainage Ditches 草地排水（ditch）}
+\end{example}
+
+\xsubsection{Edmonds-Karp}{\prefixnetwork{edmonds\_karp.cpp}}
+\begin{example}[最大流]
+\href{https://xoj.red/problems/show/3395}{XOJ 3395 网络流算法模板（1）}
+\end{example}
+\lstinputlisting{\prefixnetwork{edmonds_karp.cpp}}
+
+\xsubsection{Dinic}{\prefixnetwork{maxflow\_dinic.cpp}}
+\begin{example}[最大流]
+\href{https://xoj.red/problems/show/3389}{XOJ 3389 网络流算法模板（3）}
+\end{example}
+\lstinputlisting{\prefixnetwork{maxflow_dinic.cpp}}
 
 \subsection{SAP}
 \lstinputlisting{network/maxflow_SAP.cpp}

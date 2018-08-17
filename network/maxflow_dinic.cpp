@@ -1,103 +1,107 @@
-/*
- *  Dinic 最大流 O(V^2 * E)
- *  INIT: ne=2; head[]置为0; addedge()加入所有弧; 
- *  CALL: flow(n, s, t);
+/**
+ * Dinic 最大流 `$O(V^{2}E)$`
  */
-#define typec int               //  type of cost
-const typec inf = 0x3f3f3f3f;   // max of cost
-const typec E = 10010;
-const typec N = 1010;
+#include <bits/stdc++.h>
+using namespace std;
 
-struct edge
-{
-    int x, y, nxt;
-    typec c;
-} bf[E];
-int ne, head[N], cur[N], ps[N], dep[N];
+const int maxn = 10000 + 10, INF = 1000000000;
 
-void addedge(int x, int y, typec c)
-{   //  add an arc(x->y, c);    vertex:0~n-1;
-    bf[ne].x = x;
-    bf[ne].y = y;
-    bf[ne].c = c;
-    bf[ne].nxt = head[x];
-    head[x] = ne++;
-    bf[ne].x = y;
-    bf[ne].y = x;
-    bf[ne].c = 0;
-    bf[ne].nxt = head[y];
-    head[y] = ne++;
-    return ;
+struct Edge {
+	int from, to, cap, flow;
+};
+
+bool operator < (const Edge& a, const Edge& b) {
+	return a.from < b.from || (a.from == b.from && a.to < b.to);
 }
 
-typec flow(int n, int s, int t)
+struct Dinic
 {
-    typec tr, res = 0;
-    int i, j, k, f, r, top;
-    while (1)
-    {
-        memset(dep, -1, n * sizeof(int));
-        for (f = dep[ps[0] = s] = 0, r = 1; f != r;)
-        {
-            for (i = ps[f++], j = head[i]; j; j = bf[j].nxt)
-            {
-                if (bf[j].c && -1 == dep[k = bf[j].y])
-                {
-                    dep[k] = dep[i] + 1;
-                    ps[r++] = k;
-                    if (k == t)
-                    {
-                        f = r;
-                        break;
-                    }
-                }
-            }
-        }
-        if (-1 == dep[t])
-        {
-            break;
-        }
-        memcpy(cur, head, n * sizeof(int));
-        for (i = s, top = 0; ;)
-        {
-            if (i == t)
-            {
-                for (k = 0, tr = inf; k < top; ++k)
-                {
-                    if (bf[ps[k]].c < tr)
-                    {
-                        tr = bf[ps[f = k]].c;
-                    }
-                }
-                for (k = 0; k < top; ++k)
-                {
-                    bf[ps[k]].c -= tr, bf[ps[k]^1].c += tr;
-                }
-                res += tr;
-                i = bf[ps[top = f]].x;
-            }
-            for (j = cur[i]; cur[i]; j = cur[i] = bf[cur[i]].nxt)
-            {
-                if (bf[j].c && dep[i] + 1 == dep[bf[j].y])
-                {
-                    break;
-                }
-            }
-            if (cur[i])
-            {
-                ps[top++] = cur[i];
-                i = bf[cur[i]].y;
-            }
-            else
-            {
-                if (0 == top)
-                {
-                    break;
-                }
-                dep[i] = -1;
-                i = bf[ps[--top]].x;
-            }
-        }
-    }
-    return res;
+	int n, m, s, t;
+	vector<Edge> edges;	/*边edges[i]与edges[i^1]互为反向弧*/
+	vector<int> G[maxn];//G[i][j]表示结点i的第j条边在edges中的序号
+	bool vis[maxn];		//BFS使用
+	int d[maxn];		//d[i]表示从源点到点i的距离
+	int cur[maxn];		//当前弧指针
+
+	void init(int n)
+	{
+		for (int i = 0; i < n; i++) G[i].clear();
+		edges.clear();
+	}
+
+	void init_flow()
+	{
+		for (int i = 0; i < edges.size(); i++) edges[i].flow = 0;    
+	}
+
+	void add_edges(int from, int to, int cap)
+	{
+		edges.push_back((Edge){from, to, cap, 0});
+		edges.push_back((Edge){to, from, 0, 0});
+		m = edges.size();
+		G[from].push_back(m-2);
+		G[to].push_back(m-1);
+	}
+
+	bool BFS()
+	{
+		memset(vis, 0, sizeof(vis));
+		queue<int> Q;
+		Q.push(s);  vis[s] = 1;  d[s] = 0;
+		while (!Q.empty()) {
+			int x = Q.front(); Q.pop();
+			for (int i = 0; i < G[x].size(); i++) {
+				Edge& e = edges[G[x][i]];
+				if (!vis[e.to] && e.cap > e.flow) {
+					vis[e.to] = 1;
+					d[e.to] = d[x] + 1;
+					Q.push(e.to);
+				}
+			}
+		}
+		return vis[t];
+	}
+
+	int DFS(int x, int a)
+	{
+		if (x == t || a == 0) return a;
+		int flow = 0, f;
+		for (int& i = cur[x]; i < G[x].size(); i++) {
+			Edge& e = edges[G[x][i]];
+			if (d[x] + 1 == d[e.to]
+				&& (f = DFS(e.to, min(a, e.cap-e.flow))) > 0) {
+				e.flow += f;
+				edges[G[x][i]^1].flow -= f;
+				flow += f;
+				a -= f;
+				if(a == 0) break;
+			}
+		}
+		return flow;
+	}
+
+	int max_flow(int s, int t)
+	{
+		this->s = s; this->t = t;
+		int flow = 0;
+		while (BFS()) {
+			memset(cur, 0, sizeof(cur));
+			flow += DFS(s, INF);
+		}
+		return flow;
+	}
+} g;
+
+int main() {
+	int n, e, s, t;
+	scanf("%d%d%d%d", &n, &e, &s, &t);
+	g.init(n);
+	while (e--) {
+		int u, v, c;
+		scanf("%d%d%d", &u, &v, &c);
+		g.add_edges(u, v, c);
+	}
+	int flow = g.max_flow(s, t);
+	printf("%d\n", flow);
+	return 0;
 }
