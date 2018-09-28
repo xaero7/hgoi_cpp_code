@@ -4,7 +4,8 @@
 \chapter{图论}
 \label{graph_theory}
 
-
+\newcommand{\prefixgrapthy}[1]{graph\_theory/#1}
+\newcommand{\xprefixgrapthy}[1]{graph_theory/#1}
 
 \section{最短路}
 
@@ -44,12 +45,21 @@
 
 
 \section{最小生成树 / 森林}
-\subsection{Prim}
-例：\href{https://xoj.red/problems/show/1240}{XOJ 1240 Agri-Net 最短网络}
-\lstinputlisting{graph_theory/mst_prim_matrix.cpp}
 
-\subsection{Prim + priority\_queue优化}
-\lstinputlisting{graph_theory/mst_prim_priority_queue.cpp}
+\begin{example}[最小生成树]
+\href{https://xoj.red/problems/show/1240}{XOJ 1240 Agri-Net 最短网络}
+\end{example}
+
+\xsubsection{Prim + 邻接矩阵}{\prefixgrapthy{mst\_prim\_matrix.cpp}}
+
+\lstinputlisting{\xprefixgrapthy{mst_prim_matrix.cpp}}
+
+\xsubsection{Prim + 邻接表}{\prefixgrapthy{mst\_prim\_vector.cpp}}
+
+\lstinputlisting{\xprefixgrapthy{mst_prim_vector.cpp}}
+
+\xsubsection{Prim + priority\_queue优化}{\prefixgrapthy{mst\_prim\_priority\_queue.cpp}}
+\lstinputlisting{\xprefixgrapthy{mst_prim_priority_queue.cpp}}
 
 \subsection{Kruskal}
 \lstinputlisting{graph_theory/mst_kruskal.cpp}
